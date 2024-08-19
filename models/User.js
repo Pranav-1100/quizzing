@@ -1,82 +1,86 @@
-const { DataTypes } = require('sequelize');
+const { DataTypes, Model } = require('sequelize');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-module.exports = (sequelize) => {
-  const User = sequelize.define('User', {
-    id: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
-      primaryKey: true
-    },
-    username: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true
-    },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-      validate: {
-        isEmail: true
-      }
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    role: {
-      type: DataTypes.ENUM('admin', 'teacher', 'student'),
-      defaultValue: 'student'
-    },
-    isActive: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true
-    },
-    lastLoginAt: {
-      type: DataTypes.DATE,
-      allowNull: true
-    },
-    preferredSubjects: {
-      type: DataTypes.ARRAY(DataTypes.STRING),
-      defaultValue: []
-    },
-    examPreparation: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    difficultyPreference: {
-      type: DataTypes.ENUM('beginner', 'intermediate', 'advanced'),
-      defaultValue: 'intermediate'
-    },
-    questionsGenerated: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0
-    },
-    notesGenerated: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0
-    }
-  }, {
-    tableName: 'users',
-    timestamps: true,
-    paranoid: true,
-    hooks: {
-      beforeCreate: async (user) => {
-        if (user.password) {
-          user.password = await bcrypt.hash(user.password, 10);
+class User extends Model {
+  static init(sequelize) {
+    super.init({
+      id: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        primaryKey: true
+      },
+      username: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true
+      },
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+        validate: {
+          isEmail: true
         }
       },
-      beforeUpdate: async (user) => {
-        if (user.changed('password')) {
-          user.password = await bcrypt.hash(user.password, 10);
+      password: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      role: {
+        type: DataTypes.ENUM('admin', 'teacher', 'student'),
+        defaultValue: 'student'
+      },
+      isActive: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true
+      },
+      lastLoginAt: {
+        type: DataTypes.DATE,
+        allowNull: true
+      },
+      preferredSubjects: {
+        type: DataTypes.JSON,
+        defaultValue: []
+      },
+      examPreparation: {
+        type: DataTypes.STRING,
+        allowNull: true
+      },
+      difficultyPreference: {
+        type: DataTypes.ENUM('beginner', 'intermediate', 'advanced'),
+        defaultValue: 'intermediate'
+      },
+      questionsGenerated: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0
+      },
+      notesGenerated: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0
+      }
+    }, {
+      sequelize,
+      modelName: 'User',
+      tableName: 'users',
+      timestamps: true,
+      paranoid: true,
+      hooks: {
+        beforeCreate: async (user) => {
+          if (user.password) {
+            user.password = await bcrypt.hash(user.password, 10);
+          }
+        },
+        beforeUpdate: async (user) => {
+          if (user.changed('password')) {
+            user.password = await bcrypt.hash(user.password, 10);
+          }
         }
       }
-    }
-  });
+    });
+  }
 
-  User.prototype.generateAuthToken = function() {
+  generateAuthToken() {
     const token = jwt.sign(
       { 
         userId: this.id,
@@ -89,11 +93,11 @@ module.exports = (sequelize) => {
       { expiresIn: '24h' }
     );
     return token;
-  };
+  }
 
-  User.prototype.comparePassword = async function(candidatePassword) {
+  async comparePassword(candidatePassword) {
     return bcrypt.compare(candidatePassword, this.password);
-  };
+  }
+}
 
-  return User;
-};
+module.exports = User;
