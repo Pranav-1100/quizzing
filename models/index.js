@@ -6,6 +6,8 @@ const Note = require('./Note');
 const StudyPlan = require('./StudyPlan');
 const Quiz = require('./Quiz');
 const StudyGroup = require('./StudyGroup');
+const Doubt = require('./Doubt');
+const DoubtComment = require('./DoubtComment');
 
 const models = {
   User,
@@ -14,7 +16,9 @@ const models = {
   Note,
   StudyPlan,
   Quiz,
-  StudyGroup
+  StudyGroup,
+  Doubt,
+  DoubtComment
 };
 
 // Initialize models
