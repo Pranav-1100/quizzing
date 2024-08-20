@@ -2,7 +2,7 @@ const { DataTypes, Model } = require('sequelize');
 
 class Question extends Model {
   static init(sequelize) {
-    super.init({
+    return super.init({
       id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
@@ -47,7 +47,9 @@ class Question extends Model {
     }, {
       sequelize,
       modelName: 'Question',
-      tableName: 'questions'
+      tableName: 'questions',
+      timestamps: true, // Adds createdAt and updatedAt fields
+      paranoid: true, // Adds deletedAt field for soft deletes
     });
   }
 

@@ -3,22 +3,34 @@ const { Question } = require('../models');
 
 class QuestionService {
   async generateQuestions(userId, topic, difficulty, examType, count, type = 'open-ended') {
-    const prompt = this.createPrompt(topic, difficulty, examType, count, type);
-    const response = await openaiService.generateContent(prompt);
-    const questions = this.parseResponse(response, type);
-    
-    return Promise.all(questions.map(q => 
-      Question.create({
-        userId,
-        content: q.content,
-        type,
-        difficulty,
-        subject: topic,
-        tags: [examType],
-        options: q.options,
-        correctAnswer: q.correctAnswer
-      })
-    ));
+    try {
+      const prompt = this.createPrompt(topic, difficulty, examType, count, type);
+      const response = await openaiService.generateContent(prompt);
+      const questions = this.parseResponse(response, type);
+      
+      // Create questions in the database
+      const createdQuestions = await Promise.all(questions.map(async (q) => {
+        if (!Question || typeof Question.create !== 'function') {
+          console.error('Question model is not properly defined or imported');
+          throw new Error('Database error: Unable to create question');
+        }
+        return await Question.create({
+          userId,
+          content: q.content,
+          type,
+          difficulty,
+          subject: topic,
+          tags: [examType],
+          options: q.options,
+          correctAnswer: q.correctAnswer
+        });
+      }));
+
+      return createdQuestions;
+    } catch (error) {
+      console.error('Error generating questions:', error);
+      throw error;
+    }
   }
 
   createPrompt(topic, difficulty, examType, count, type) {
@@ -30,7 +42,11 @@ class QuestionService {
   }
 
   parseResponse(response, type) {
-    const questions = response.split('\n\n');
+    if (typeof response !== 'string') {
+      console.error('Invalid response type:', typeof response);
+      return [];
+    }
+    const questions = response.split('\n\n').filter(q => q.trim() !== '');
     return questions.map(q => {
       if (type === 'multiple-choice') {
         const [content, ...options] = q.split('\n');

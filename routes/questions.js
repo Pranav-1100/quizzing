@@ -10,7 +10,8 @@ router.post('/generate', authMiddleware, async (req, res) => {
     const questions = await questionService.generateQuestions(req.user.id, topic, difficulty, examType, count, type);
     res.status(201).json(questions);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    console.error('Error in generate questions route:', error);
+    res.status(500).json({ error: error.message });
   }
 });
 
