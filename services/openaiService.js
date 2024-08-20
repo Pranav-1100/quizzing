@@ -13,7 +13,7 @@ class OpenAIService {
         {
           model: "gpt-3.5-turbo",
           messages: [{ role: "user", content: prompt }],
-          max_tokens: 150,
+          max_tokens: 1000,
           n: 1,
           stop: null,
           temperature: 0.7,
@@ -25,14 +25,15 @@ class OpenAIService {
           }
         }
       );
-  
+
       if (response.data && response.data.choices && response.data.choices[0] && response.data.choices[0].message) {
         return response.data.choices[0].message.content.trim();
       } else {
+        console.error('Unexpected response structure from OpenAI API:', response.data);
         throw new Error('Unexpected response structure from OpenAI API');
       }
     } catch (error) {
-      console.error('Error calling OpenAI API:', error);
+      console.error('Error calling OpenAI API:', error.response ? error.response.data : error.message);
       throw new Error('Failed to generate content');
     }
   }

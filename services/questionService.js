@@ -1,5 +1,5 @@
-const openaiService = require('./openaiService');
 const { Question } = require('../models');
+const openaiService = require('./openaiService');
 
 class QuestionService {
   async generateQuestions(userId, topic, difficulty, examType, count, type = 'open-ended') {
@@ -8,12 +8,7 @@ class QuestionService {
       const response = await openaiService.generateContent(prompt);
       const questions = this.parseResponse(response, type);
       
-      // Create questions in the database
       const createdQuestions = await Promise.all(questions.map(async (q) => {
-        if (!Question || typeof Question.create !== 'function') {
-          console.error('Question model is not properly defined or imported');
-          throw new Error('Database error: Unable to create question');
-        }
         return await Question.create({
           userId,
           content: q.content,
@@ -34,31 +29,37 @@ class QuestionService {
   }
 
   createPrompt(topic, difficulty, examType, count, type) {
-    let prompt = `Generate ${count} ${difficulty} level ${type} questions about ${topic} for ${examType} exam.`;
-    if (type === 'multiple-choice') {
-      prompt += ' Include 4 options for each question and indicate the correct answer.';
-    }
-    return prompt;
+    return `Generate ${count} ${difficulty} level ${type} questions about ${topic} for ${examType} exam. Include 4 options for each question and indicate the correct answer.`;
   }
 
   parseResponse(response, type) {
-    if (typeof response !== 'string') {
-      console.error('Invalid response type:', typeof response);
+    console.log('Raw response:', response); // Add this line for debugging
+
+    if (typeof response !== 'string' || response.trim() === '') {
+      console.error('Invalid response from OpenAI:', response);
       return [];
     }
-    const questions = response.split('\n\n').filter(q => q.trim() !== '');
-    return questions.map(q => {
-      if (type === 'multiple-choice') {
-        const [content, ...options] = q.split('\n');
-        const correctAnswer = options.pop().replace('Correct Answer: ', '');
-        return { content, options, correctAnswer };
-      }
-      return { content: q };
-    });
-  }
 
-  async getQuestionsByDifficulty(userId, difficulty) {
-    return Question.findAll({ where: { userId, difficulty } });
+    const questions = response.split('\n\n').filter(q => q.trim() !== '');
+    
+    return questions.map(q => {
+      const lines = q.split('\n');
+      const content = lines[0].trim();
+      let options = [];
+      let correctAnswer = '';
+
+      if (type === 'multiple-choice' && lines.length > 1) {
+        options = lines.slice(1, -1).map(line => line.trim());
+        const lastLine = lines[lines.length - 1].trim();
+        if (lastLine.startsWith('Correct Answer:')) {
+          correctAnswer = lastLine.replace('Correct Answer:', '').trim();
+        } else {
+          options.push(lastLine);
+        }
+      }
+
+      return { content, options, correctAnswer };
+    });
   }
 }
 

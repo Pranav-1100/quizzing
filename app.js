@@ -39,7 +39,8 @@ const initDatabase = async () => {
     console.log('Database synchronized and tables created/updated');
   } catch (error) {
     console.error('Unable to connect to the database:', error);
-    process.exit(1);  // Exit the process if database connection fails
+    console.error('Detailed error:', error.parent);
+    process.exit(1);
   }
 };
 

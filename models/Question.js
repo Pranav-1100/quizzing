@@ -33,12 +33,24 @@ class Question extends Model {
         allowNull: false
       },
       tags: {
-        type: DataTypes.ARRAY(DataTypes.STRING),
-        defaultValue: []
+        type: DataTypes.TEXT,
+        get() {
+          const rawValue = this.getDataValue('tags');
+          return rawValue ? JSON.parse(rawValue) : [];
+        },
+        set(value) {
+          this.setDataValue('tags', JSON.stringify(value));
+        }
       },
       options: {
-        type: DataTypes.JSON,
-        allowNull: true
+        type: DataTypes.TEXT,
+        get() {
+          const rawValue = this.getDataValue('options');
+          return rawValue ? JSON.parse(rawValue) : null;
+        },
+        set(value) {
+          this.setDataValue('options', JSON.stringify(value));
+        }
       },
       correctAnswer: {
         type: DataTypes.STRING,
@@ -48,8 +60,8 @@ class Question extends Model {
       sequelize,
       modelName: 'Question',
       tableName: 'questions',
-      timestamps: true, // Adds createdAt and updatedAt fields
-      paranoid: true, // Adds deletedAt field for soft deletes
+      timestamps: true,
+      paranoid: true,
     });
   }
 

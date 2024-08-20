@@ -1,13 +1,37 @@
 const sequelize = require('../config/database');
 const User = require('./User');
 const Analytics = require('./Analytics');
+const Question = require('./Question');
+const Note = require('./Note');
+const StudyPlan = require('./StudyPlan');
+const Quiz = require('./Quiz');
+const StudyGroup = require('./StudyGroup');
 
 const models = {
   User,
-  Analytics
+  Analytics,
+  Question,
+  Note,
+  StudyPlan,
+  Quiz,
+  StudyGroup
 };
 
-Object.values(models).forEach(model => model.init(sequelize));
-Object.values(models).forEach(model => model.associate && model.associate(models));
+// Initialize models
+Object.values(models).forEach(model => {
+  if (typeof model.init === 'function') {
+    model.init(sequelize);
+  }
+});
 
-module.exports = models;
+// Set up associations
+Object.values(models).forEach(model => {
+  if (typeof model.associate === 'function') {
+    model.associate(models);
+  }
+});
+
+module.exports = {
+  sequelize,
+  ...models
+};
