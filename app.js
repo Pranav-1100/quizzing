@@ -9,6 +9,7 @@ const noteRoutes = require('./routes/notes');
 const studyPlanRoutes = require('./routes/studyPlan');
 const quizRoutes = require('./routes/quiz');
 const studyGroupRoutes = require('./routes/studyGroup');
+const doubtRoutes = require('./routes/doubts');
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.use('/api/notes', noteRoutes);
 app.use('/api/study-plan', studyPlanRoutes);
 app.use('/api/quiz', quizRoutes);
 app.use('/api/study-group', studyGroupRoutes);
+app.use('/api/doubts', doubtRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
