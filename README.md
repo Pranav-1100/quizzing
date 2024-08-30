@@ -13,11 +13,11 @@ after that just you can just use all the APIs present in it You can see all the 
 
 I have completed the frontend too and you can check it out at [https://github.com/Pranav-1100/quizzing-frontend]
 
-![image](https://github.com/Pranav-1100/quizzing/blob/main/screenshot_2024-08-20_at_7.21.50___pm.png)
-![image](https://github.com/Pranav-1100/quizzing/blob/main/screenshot_2024-08-20_at_7.23.09___pm.png)
-![image](https://github.com/Pranav-1100/quizzing/blob/main/screenshot_2024-08-20_at_7.23.36___pm.png)
-![image](https://github.com/Pranav-1100/quizzing/blob/main/screenshot_2024-08-20_at_7.27.06___pm.png)
-![image](https://github.com/Pranav-1100/quizzing/blob/main/screenshot_2024-08-20_at_7.27.44___pm.png)
-![image](https://github.com/Pranav-1100/quizzing/blob/main/screenshot_2024-08-20_at_7.28.17___pm.png)
-![image](https://github.com/Pranav-1100/quizzing/blob/main/screenshot_2024-08-20_at_7.28.26___pm.png)
-![image](https://github.com/Pranav-1100/quizzing/blob/main/screenshot_2024-08-20_at_7.28.33___pm.png)
+![image](https://github.com/Pranav-1100/chatbot/blob/main/Aug%2011%20Screenshot%20from%20Hack%20Club%20(1).png)
+![image](https://github.com/Pranav-1100/chatbot/blob/main/Aug%2011%20Screenshot%20from%20Hack%20Club%20(2).png)
+![image](https://github.com/Pranav-1100/chatbot/blob/main/Aug%2011%20Screenshot%20from%20Hack%20Club%20(3).png)
+![image](https://github.com/Pranav-1100/chatbot/blob/main/Aug%2011%20Screenshot%20from%20Hack%20Club%20(4).png)
+![image](https://github.com/Pranav-1100/chatbot/blob/main/Aug%2011%20Screenshot%20from%20Hack%20Club%20(5).png)
+![image](https://github.com/Pranav-1100/chatbot/blob/main/Aug%2011%20Screenshot%20from%20Hack%20Club%20(6).png)
+![image](https://github.com/Pranav-1100/chatbot/blob/main/Aug%2011%20Screenshot%20from%20Hack%20Club%20(7).png)
+![image](https://github.com/Pranav-1100/chatbot/blob/main/Aug%2011%20Screenshot%20from%20Hack%20Club.png)
